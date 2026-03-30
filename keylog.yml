@@ -1,0 +1,30 @@
+name: Build My Resistance Tool
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Find and Compile C Code
+      shell: powershell
+      run: |
+        # Ye command kisi bhi .c file ko dhoond legi chahe naam kuch bhi ho
+        $cFile = Get-ChildItem -Filter *.c | Select-Object -First 1
+        if ($cFile) {
+            Write-Host "Compiling file: $($cFile.Name)"
+            gcc $($cFile.Name) -o resistance_tool.exe -luser32 -mwindows
+        } else {
+            Write-Error "Error: Koi .c file nahi mili repository mein!"
+            exit 1
+        }
+
+    - name: Save the EXE File
+      uses: actions/upload-artifact@v4
+      with:
+        name: Compiled-Binary
+        path: resistance_tool.exe
